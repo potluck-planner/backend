@@ -1,7 +1,10 @@
 exports.up = async function(knex, Promise) {
   await knex.schema.createTable('users', function(table) {
     table.increments();
-    table.string('username', 20).notNullable();
+    table
+      .string('username', 20)
+      .unique()
+      .notNullable();
     table.string('password', 25).notNullable();
   });
 
@@ -31,8 +34,8 @@ exports.up = async function(knex, Promise) {
 
   await knex.schema.createTable('potluck_guest', function(table) {
     table
-      .integer('user_id')
-      .references('users.id')
+      .string('guest_name')
+      .references('users.username')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
     table
@@ -46,27 +49,23 @@ exports.up = async function(knex, Promise) {
       .notNullable();
   });
 
-  await knex.schema.createTable('food', function(table) {
-    table.increments('recipe_id');
-    table.string('recipe_name').notNullable();
-  });
-
   await knex.schema.createTable('event_food_list', function(table) {
     table
       .integer('event_id')
       .references('event.event_id')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
+    table.string('recipe_name').notNullable();
     table
-      .integer('recipe_id')
-      .references('food.recipe_id')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      .integer('quantity')
+      .defaultTo(1)
+      .notNullable();
     table
-      .integer('user_id')
-      .references('users.id')
+      .string('guest_name')
+      .references('users.username')
       .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      .onDelete('CASCADE')
+      .defaultTo(null);
     table
       .boolean('being_brought')
       .defaultTo(false)
@@ -74,11 +73,11 @@ exports.up = async function(knex, Promise) {
   });
 };
 
-exports.down = function(knex, Promise) {
-  knex.schema.dropTableIfExists('users');
-  knex.schema.dropTableIfExists('event');
-  knex.schema.dropTableIfExists('location');
-  knex.schema.dropTableIfExists('potluck_guest');
-  knex.schema.dropTableIfExists('food');
-  knex.schema.dropTableIfExists('event_food_list');
+exports.down = async function(knex, Promise) {
+  await knex.schema.dropTableIfExists('users');
+  await knex.schema.dropTableIfExists('event');
+  await knex.schema.dropTableIfExists('location');
+  await knex.schema.dropTableIfExists('potluck_guest');
+  await knex.schema.dropTableIfExists('food');
+  await knex.schema.dropTableIfExists('event_food_list');
 };
