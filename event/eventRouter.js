@@ -73,4 +73,66 @@ router.post('/:id/guests', verifyLogin, (req, res) => {
     });
 });
 
+router.put('/:id', (req, res) => {
+  Event.updateEvent(req.params.id, req.body)
+    .then(event => {
+      res.status(202).json({ message: 'event successfully updated', event });
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'internal server error.', error: err });
+    });
+});
+
+router.put('/:id/location', (req, res) => {
+  Event.updateLocation(req.params.id, req.body)
+    .then(location => {
+      res
+        .status(202)
+        .json({ message: 'location successfully updated', location });
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'internal server error.', error: err });
+    });
+});
+
+router.put('/:id/foodlist', (req, res) => {
+  Event.updateFood(req.params.id, req.body)
+    .then(food => {
+      res.status(202).json({ message: 'food successfully updated', food });
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'internal server error.', error: err });
+    });
+});
+
+router.put('/:id/guests', (req, res) => {
+  Event.updateGuest(req.params.id, req.body)
+    .then(food => {
+      res.status(202).json({ message: 'guest successfully updated', food });
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'internal server error.', error: err });
+    });
+});
+
+router.delete('/:id', (req, res) => {
+  Event.delEvent(req.params.id)
+    .then(event => {
+      res.status(202).json({ message: 'event successfully deleted', event });
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'internal server error.', error: err });
+    });
+});
+
+router.delete('/:id/foodlist', (req, res) => {
+  Event.delFood(req.params.id, req.body.recipe_name)
+    .then(food => {
+      res.status(202).json({ message: 'food successfully deleted', food });
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'internal server error.', error: err });
+    });
+});
+
 module.exports = router;

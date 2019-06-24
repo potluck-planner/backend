@@ -8,7 +8,12 @@ module.exports = {
   addFood,
   addGuest,
   updateEvent,
-  getEvents
+  getEvents,
+  updateGuest,
+  updateFood,
+  updateLocation,
+  delEvent,
+  delFood
 };
 
 function createEvent(event) {
@@ -49,7 +54,11 @@ function addFood(id, food) {
 }
 
 function addGuest(id, guest) {
-  return db('potluck_guest').insert({ event_id: id, username: guest.username, going: guest.going });
+  return db('potluck_guest').insert({
+    event_id: id,
+    username: guest.username,
+    going: guest.going
+  });
 }
 
 function updateEvent(id, event) {
@@ -58,8 +67,35 @@ function updateEvent(id, event) {
     .update({ event });
 }
 
-function updateEvent(id, event) {
+function updateLocation(id, location) {
   return db('location')
     .where({ event_id: id })
-    .update({ event });
+    .update({ location });
+}
+
+function updateFood(id, food) {
+  return db('event_food_list')
+    .where({ event_id: id })
+    .update({ food });
+}
+
+function updateGuest(id, guest) {
+  return db('potluck_guest')
+    .where({ event_id: id })
+    .update({ guest });
+}
+
+function delEvent(id) {
+  return db('event')
+    .where({ event_id: id })
+    .del();
+}
+
+function delFood(id, food) {
+  return db(event_food_list)
+    .where({ event_id: id })
+    .andWhere(function() {
+      this.where(recipe_name, '=', food);
+    })
+    .del();
 }
