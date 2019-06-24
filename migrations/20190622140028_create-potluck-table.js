@@ -4,7 +4,6 @@ exports.up = async function(knex, Promise) {
     table
       .string('username', 20)
       .unique()
-      .notNullable();
     table.string('password', 25).notNullable();
   });
 
