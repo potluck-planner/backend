@@ -34,8 +34,8 @@ exports.up = async function(knex, Promise) {
 
   await knex.schema.createTable('potluck_guest', function(table) {
     table
-      .string('guest_name')
-      .references('users.username')
+      .integer('user_id')
+      .references('users.id')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
     table
