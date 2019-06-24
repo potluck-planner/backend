@@ -8,27 +8,33 @@ module.exports = {
   addFood,
   addGuest,
   updateEvent,
+  getEvents
 };
 
 function createEvent(event) {
   return db('event').insert(event);
 }
 
-function getEvent(id) {
+function getEvents() {
+  return db('event');
+}
+
+function getEvent(event_id) {
   return db('event')
-    .where({ event_id: id })
+    .where({ event_id })
     .first();
 }
 
 function getEventGuests(id) {
-  db.select('*')
+  return db
+    .select('*')
     .from('potluck_guest')
     .where({ event_id: id });
 }
 
-function addLocation(id, location) {
-  db('location').insert({
-    event_id: id,
+function addLocation(event_id, location) {
+  return db('location').insert({
+    event_id,
     address: location.address,
     city: location.city,
     state: location.state
@@ -36,22 +42,24 @@ function addLocation(id, location) {
 }
 
 function addFood(id, food) {
-  db('event_food_list').insert({ event_id: id, recipe_name: food.recipe_name });
+  return db('event_food_list').insert({
+    event_id: id,
+    recipe_name: food.recipe_name
+  });
 }
 
 function addGuest(id, guest) {
-  db('potluck_guest').insert({ event_id: id, username: guest });
+  return db('potluck_guest').insert({ event_id: id, username: guest.username, going: guest.going });
 }
 
 function updateEvent(id, event) {
-  db('event')
+  return db('event')
     .where({ event_id: id })
     .update({ event });
 }
 
 function updateEvent(id, event) {
-  db('location')
+  return db('location')
     .where({ event_id: id })
-    .update({ event })
+    .update({ event });
 }
-

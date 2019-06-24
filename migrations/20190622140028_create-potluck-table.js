@@ -47,7 +47,7 @@ exports.up = async function(knex, Promise) {
       .notNullable();
     table
       .boolean('going')
-      .defaultTo(false)
+      .defaultTo(null)
   });
 
   await knex.schema.createTable('event_food_list', function(table) {

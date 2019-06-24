@@ -1,8 +1,18 @@
 const router = require('express').Router();
 const Event = require('./eventModel');
 
+router.get('/', (req, res) => {
+  Event.getEvents()
+    .then(event => {
+      res.status(200).json(event);
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'internal server error.', error: err });
+    });
+});
+
 router.get('/:id', (req, res) => {
-  Event.getEvent(req.param.id)
+  Event.getEvent(req.params.id)
     .then(event => {
       res.status(200).json(event);
     })
@@ -34,6 +44,7 @@ router.post('/', (req, res) => {
 router.post('/:id/location', (req, res) => {
   Event.addLocation(req.params.id, req.body)
     .then(location => {
+      console.log(location);
       res.status(201).json({ message: 'location successfully added' });
     })
     .catch(err => {
