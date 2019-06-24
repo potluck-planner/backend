@@ -4,6 +4,7 @@ module.exports = {
   createEvent,
   getEvent,
   getEventGuests,
+  getLocation,
   addLocation,
   addFood,
   addGuest,
@@ -34,6 +35,13 @@ function getEventGuests(id) {
   return db
     .select('*')
     .from('potluck_guest')
+    .where({ event_id: id });
+}
+
+function getLocation(id) {
+  return db
+    .select('*')
+    .from('location')
     .where({ event_id: id });
 }
 
@@ -92,10 +100,10 @@ function delEvent(id) {
 }
 
 function delFood(id, food) {
-  return db(event_food_list)
+  return db('event_food_list')
     .where({ event_id: id })
     .andWhere(function() {
-      this.where(recipe_name, '=', food);
+      this.where('recipe_name', '=', food);
     })
     .del();
 }

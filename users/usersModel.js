@@ -18,12 +18,11 @@ function getUserById(id) {
     .first();
 }
 
-function getUserEvents(id) {
+function getUserEvents(username) {
   return db
     .select('*')
     .from('potluck_guest')
-    .where({ user_id: id })
-    .innerJoin('events', 'potluck_guest.event_id', 'event.event_id');
+    .where({ username }).innerJoin('event', 'potluck_guest.event_id', 'event.event_id')
 }
 
 function registerUser(info) {
