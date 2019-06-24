@@ -3,7 +3,9 @@ const db = require('../dbConfig');
 module.exports = {
   getUsers,
   getUserById,
-  registerUser
+  registerUser,
+  getUserEvents,
+  loginUser
 };
 
 function getUsers() {
@@ -26,4 +28,10 @@ function getUserEvents(id) {
 
 function registerUser(info) {
   return db('users').insert(info);
+}
+
+function loginUser(username) {
+  return db('users')
+    .where({ username })
+    .first();
 }
