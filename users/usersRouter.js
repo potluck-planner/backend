@@ -42,7 +42,7 @@ router.post('/register', (req, res) => {
     });
 });
 
-router.post('login', (req, res) => {
+router.post('/login', (req, res) => {
   Users.loginUser(req.body.username)
     .then(user => {
       if (req.body.password === user.password) {

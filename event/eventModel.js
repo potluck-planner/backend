@@ -6,7 +6,8 @@ module.exports = {
   getEventGuests,
   addLocation,
   addFood,
-  addGuest
+  addGuest,
+  updateEvent,
 };
 
 function createEvent(event) {
@@ -39,5 +40,18 @@ function addFood(id, food) {
 }
 
 function addGuest(id, guest) {
-  db('potluck_guest').insert({ event_id: id, username: guest })
+  db('potluck_guest').insert({ event_id: id, username: guest });
 }
+
+function updateEvent(id, event) {
+  db('event')
+    .where({ event_id: id })
+    .update({ event });
+}
+
+function updateEvent(id, event) {
+  db('location')
+    .where({ event_id: id })
+    .update({ event })
+}
+
