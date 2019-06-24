@@ -1,7 +1,11 @@
 const router = require('express').Router();
 const Users = require('./usersModel');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const secret = require('../secret/secretKey');
+const verifyLogin = require('../auth/verifyLogin');
 
-router.get('/', (req, res) => {
+router.get('/', verifyLogin, (req, res) => {
   Users.getUsers()
     .then(users => {
       res.status(200).json(users);
@@ -11,7 +15,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', verifyLogin, (req, res) => {
   Users.getUserById(req.params.id)
     .then(user => {
       res.status(200).json(user);
@@ -21,7 +25,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.get('/:id/events', (req, res) => {
+router.get('/:id/events', verifyLogin, (req, res) => {
   Users.getUserEvents(req.params.id)
     .then(event => {
       res.status(200).json(event);
@@ -32,9 +36,16 @@ router.get('/:id/events', (req, res) => {
 });
 
 router.post('/register', (req, res) => {
+  const hash = bcrypt.hashSync(req.body.password, 8);
+
+  req.body = {
+    username: req.body.username,
+    password: hash
+  };
+
   Users.registerUser(req.body)
     .then(user => {
-      res.status(201).json({ message: 'User successfully created.' });
+      res.status(200).json({ message: 'user successfully created' });
     })
     .catch(err => {
       res.status(500).json({ message: 'internal server error.', error: err });
@@ -44,15 +55,30 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
   Users.loginUser(req.body.username)
     .then(user => {
-      if (req.body.password === user.password) {
-        res.status(200).json({ message: 'user successfully logged in' });
+      if (bcrypt.compareSync(req.body.password, user.password)) {
+        const token = generateToken(user);
+        res.status(200).json({ message: `successfully logged in`, token });
       } else {
-        res.status(401).json({ message: 'incorrect username or password' });
+        res.status(400).json({ message: 'invalid credentials' });
       }
     })
     .catch(err => {
       res.status(500).json({ message: 'internal server error.', error: err });
     });
 });
+
+function generateToken(user) {
+  const payload = {
+    id: user.id,
+    username: user.username,
+    department: user.department
+  };
+
+  const options = {
+    expiresIn: '1d'
+  };
+
+  return jwt.sign(payload, secret.secretKey, options);
+}
 
 module.exports = router;

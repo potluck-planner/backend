@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const Event = require('./eventModel');
+const verifyLogin = require('../auth/verifyLogin');
 
-router.get('/', (req, res) => {
+router.get('/', verifyLogin, (req, res) => {
   Event.getEvents()
     .then(event => {
       res.status(200).json(event);
@@ -11,7 +12,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', verifyLogin, (req, res) => {
   Event.getEvent(req.params.id)
     .then(event => {
       res.status(200).json(event);
@@ -21,7 +22,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.get('/:id/guests', (req, res) => {
+router.get('/:id/guests', verifyLogin, (req, res) => {
   Event.getEventGuests(req.params.id)
     .then(guests => {
       res.status(200).json(guests);
@@ -31,7 +32,7 @@ router.get('/:id/guests', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', verifyLogin, (req, res) => {
   Event.createEvent(req.body)
     .then(event => {
       res.status(201).json({ message: 'event successfully created' });
@@ -41,7 +42,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.post('/:id/location', (req, res) => {
+router.post('/:id/location', verifyLogin, (req, res) => {
   Event.addLocation(req.params.id, req.body)
     .then(location => {
       console.log(location);
@@ -52,7 +53,7 @@ router.post('/:id/location', (req, res) => {
     });
 });
 
-router.post('/:id/foodlist', (req, res) => {
+router.post('/:id/foodlist', verifyLogin, (req, res) => {
   Event.addFood(req.params.id, req.body)
     .then(food => {
       res.status(201).json({ message: 'food successfully added' });
@@ -62,7 +63,7 @@ router.post('/:id/foodlist', (req, res) => {
     });
 });
 
-router.post('/:id/guests', (req, res) => {
+router.post('/:id/guests', verifyLogin, (req, res) => {
   Event.addGuest(req.params.id, req.body)
     .then(guest => {
       res.status(201).json({ message: 'guest invited' });
