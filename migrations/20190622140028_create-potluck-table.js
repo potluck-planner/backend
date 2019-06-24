@@ -34,19 +34,20 @@ exports.up = async function(knex, Promise) {
 
   await knex.schema.createTable('potluck_guest', function(table) {
     table
-      .integer('user_id')
-      .references('users.id')
+      .string('username')
+      .references('users.username')
       .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      .onDelete('CASCADE')
+      .notNullable();
     table
       .integer('event_id')
       .references('event.event_id')
       .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      .onDelete('CASCADE')
+      .notNullable();
     table
       .boolean('going')
       .defaultTo(false)
-      .notNullable();
   });
 
   await knex.schema.createTable('event_food_list', function(table) {
@@ -54,22 +55,17 @@ exports.up = async function(knex, Promise) {
       .integer('event_id')
       .references('event.event_id')
       .onUpdate('CASCADE')
-      .onDelete('CASCADE');
-    table.string('recipe_name').notNullable();
-    table
-      .integer('quantity')
-      .defaultTo(1)
+      .onDelete('CASCADE')
       .notNullable();
+    table.string('recipe_name').notNullable();
+    table.integer('quantity').defaultTo(1);
     table
       .string('guest_name')
       .references('users.username')
       .onUpdate('CASCADE')
       .onDelete('CASCADE')
       .defaultTo(null);
-    table
-      .boolean('being_brought')
-      .defaultTo(false)
-      .notNullable();
+    table.boolean('being_brought').defaultTo(false);
   });
 };
 
