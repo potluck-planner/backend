@@ -157,13 +157,20 @@ router.put('/:id/guests', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  Event.delEvent(req.params.id)
-    .then(event => {
-      if (event) {
-        res.status(202).json({ message: 'event successfully deleted', event });
-      } else {
-        res.status(404).json({ message: 'event not found' });
-      }
+  Event.getEvent(req.params.id)
+    .then(Oldevent => {
+      Event.delEvent(req.params.id).then(event => {
+        if (event) {
+          res
+            .status(202)
+            .json({
+              message: 'event successfully deleted',
+              Oldevent
+            });
+        } else {
+          res.status(404).json({ message: 'event not found' });
+        }
+      });
     })
     .catch(err => {
       res.status(500).json({ message: 'internal server error.', error: err });
@@ -171,6 +178,8 @@ router.delete('/:id', (req, res) => {
 });
 
 router.delete('/:id/foodlist', (req, res) => {
+
+  
   Event.delFood(req.params.id, req.body.recipe_name)
     .then(food => {
       if (food) {
