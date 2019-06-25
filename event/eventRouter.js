@@ -152,7 +152,11 @@ router.put('/:id/guests', (req, res) => {
 router.delete('/:id', (req, res) => {
   Event.delEvent(req.params.id)
     .then(event => {
-      res.status(202).json({ message: 'event successfully deleted', event });
+      if (event) {
+        res.status(202).json({ message: 'event successfully deleted', event });
+      } else {
+        res.status(404).json({ message: 'event not found' });
+      }
     })
     .catch(err => {
       res.status(500).json({ message: 'internal server error.', error: err });
@@ -162,7 +166,25 @@ router.delete('/:id', (req, res) => {
 router.delete('/:id/foodlist', (req, res) => {
   Event.delFood(req.params.id, req.body.recipe_name)
     .then(food => {
-      res.status(202).json({ message: 'food successfully deleted', food });
+      if (food) {
+        res.status(202).json({ message: 'food successfully deleted', food });
+      } else {
+        res.status(404).json({ message: 'food not found' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'internal server error.', error: err });
+    });
+});
+
+router.delete('/:id/guests', (req, res) => {
+  Event.delGuest(req.params.id, req.body.username)
+    .then(guest => {
+      if (guest) {
+        res.status(202).json({ message: 'guest successfully deleted' });
+      } else {
+        res.status(404).json({ message: 'guest not found' });
+      }
     })
     .catch(err => {
       res.status(500).json({ message: 'internal server error.', error: err });
