@@ -6,6 +6,7 @@ exports.up = async function(knex, Promise) {
       .unique()
       .notNullable();
     table.string('password', 25).notNullable();
+    table.string('name', 50).notNullable();
   });
 
   await knex.schema.createTable('event', function(table) {
@@ -38,7 +39,8 @@ exports.up = async function(knex, Promise) {
       .references('users.username')
       .onUpdate('CASCADE')
       .onDelete('CASCADE')
-      .notNullable();
+      .notNullable()
+      .unique();
     table
       .integer('event_id')
       .references('event.event_id')

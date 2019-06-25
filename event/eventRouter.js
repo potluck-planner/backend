@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const Event = require('./eventModel');
-const verifyLogin = require('../auth/verifyLogin');
 const db = require('../dbConfig');
 
 router.get('/', (req, res) => {
