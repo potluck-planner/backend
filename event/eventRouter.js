@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Event = require('./eventModel');
 const verifyLogin = require('../auth/verifyLogin');
+const db = require('../dbConfig');
 
 router.get('/', (req, res) => {
   Event.getEvents()
@@ -45,7 +46,18 @@ router.get('/:id/location', (req, res) => {
 router.post('/', (req, res) => {
   Event.createEvent(req.body)
     .then(event => {
-      res.status(201).json({ message: 'event successfully created' });
+      Event.getEvent(event[0]).then(event => {
+        db.select('username')
+          .from('users')
+          .where({ id: event.organizer_id })
+          .then(user => {
+            Event.addGuest(event.event_id, user[0]).then(guest => {
+              res
+                .status(201)
+                .json({ message: 'event successfully created', event });
+            });
+          });
+      });
     })
     .catch(err => {
       res.status(500).json({ message: 'internal server error.', error: err });
