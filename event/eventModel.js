@@ -4,6 +4,7 @@ module.exports = {
   createEvent,
   getEvent,
   getEventGuests,
+  getEventFood,
   getLocation,
   addLocation,
   addFood,
@@ -29,6 +30,10 @@ function getEvent(event_id) {
   return db('event')
     .where({ event_id })
     .first();
+}
+
+function getEventFood(event_id) {
+  return db('event_food_list').where({ event_id });
 }
 
 function getEventGuests(id) {

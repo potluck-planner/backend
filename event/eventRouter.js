@@ -16,7 +16,19 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   Event.getEvent(req.params.id)
     .then(event => {
-      res.status(200).json(event);
+      Event.getEventGuests(req.params.id).then(guests => {
+        Event.getLocation(req.params.id).then(location => {
+          Event.getEventFood(req.params.id).then(food => {
+            eventDetails = {
+              event,
+              guests,
+              location,
+              food
+            };
+            res.status(200).json(eventDetails);
+          });
+        });
+      });
     })
     .catch(err => {
       res.status(500).json({ message: 'internal server error.', error: err });
