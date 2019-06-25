@@ -64,9 +64,17 @@ router.post('/', (req, res) => {
           .where({ id: event.organizer_id })
           .then(user => {
             Event.addGuest(event.event_id, user[0]).then(guest => {
-              res
-                .status(201)
-                .json({ message: 'event successfully created', event });
+              db('potluck_guest')
+                .where({ event_id: event.event_id })
+                .andWhere(function() {
+                  this.where('username', '=', user[0].username);
+                })
+                .update({ going: true })
+                .then(result => {
+                  res
+                    .status(201)
+                    .json({ message: 'event successfully created', event });
+                });
             });
           });
       });
