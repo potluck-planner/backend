@@ -71,7 +71,8 @@ function addGuest(id, guest) {
   return db('potluck_guest').insert({
     event_id: id,
     username: guest.username,
-    going: guest.going
+    going: guest.going,
+    name: guest.name
   });
 }
 
