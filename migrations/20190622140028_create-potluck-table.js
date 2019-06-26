@@ -40,7 +40,7 @@ exports.up = async function(knex, Promise) {
       .references('users.username')
       .onUpdate('CASCADE')
       .onDelete('CASCADE')
-      .notNullable()
+      .notNullable();
     table
       .integer('event_id')
       .references('event.event_id')
