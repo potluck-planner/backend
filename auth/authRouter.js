@@ -9,14 +9,15 @@ router.post('/register', (req, res) => {
 
   req.body = {
     username: req.body.username,
-    password: hash
+    password: hash,
+    name: req.body.name
   };
 
   Users.registerUser(req.body)
     .then(user => {
-      res
-        .status(200)
-        .json({ message: 'user successfully created', user });
+      Users.getUserById(user[0]).then(newUser => {
+        res.status(200).json({ message: 'user successfully created', newUser });
+      });
     })
     .catch(err => {
       res.status(500).json({ message: 'internal server error.', error: err });

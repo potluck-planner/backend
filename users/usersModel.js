@@ -22,11 +22,12 @@ function getUserEvents(username) {
   return db
     .select('*')
     .from('potluck_guest')
-    .where({ username }).innerJoin('event', 'potluck_guest.event_id', 'event.event_id')
+    .where({ username })
+    .innerJoin('event', 'potluck_guest.event_id', 'event.event_id');
 }
 
-function registerUser(info) {
-  return db('users').insert(info);
+function registerUser(user) {
+  return db('users').insert(user);
 }
 
 function loginUser(username) {
