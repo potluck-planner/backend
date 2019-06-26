@@ -34,13 +34,13 @@ exports.up = async function(knex, Promise) {
   });
 
   await knex.schema.createTable('potluck_guest', function(table) {
+    table.increments('guest_id');
     table
       .string('username')
       .references('users.username')
       .onUpdate('CASCADE')
       .onDelete('CASCADE')
       .notNullable()
-      .unique();
     table
       .integer('event_id')
       .references('event.event_id')
