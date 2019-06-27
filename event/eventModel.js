@@ -90,6 +90,9 @@ function updateLocation(id, location) {
 function updateFood(id, food) {
   return db('event_food_list')
     .where({ event_id: id })
+    .andWhere(function() {
+      this.where('recipe_name', '=', food.recipe_name);
+    })
     .update(food);
 }
 
